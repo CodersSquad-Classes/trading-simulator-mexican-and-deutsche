@@ -10,7 +10,13 @@ On this challenge, you're implementing a Continuos Limit Order Book (CLOB). Buye
 
 ## How to build and run
 
-_ADD YOUR INSTRUCTIONS HERE_
+### Linux / macOS / WSL
+1. Compile: `g++ -std=c++11 main.cpp MatchingEngine.cpp Display.cpp -o market`
+2. Run: `./market`
+
+### Windows (MinGW)
+1. Compile: `g++ -std=c++11 main.cpp MatchingEngine.cpp Display.cpp -o market.exe`
+2. Run: `market.exe`
 
 
 ## Deliverables

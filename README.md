@@ -83,6 +83,10 @@ This project demonstrated the critical role of data structure selection in compl
 
 ## Conclusions and Learning - Don Calderon
 
+Developing this project was an eye-opening experience in understanding how financial systems rely on algorithmic precision and fairness. Implementing the Continuous Limit Order Book (CLOB) architecture helped me appreciate how critical data structures and time management are to market efficiency. The use of priority queues not only simplified order organization but also ensured that matching decisions followed strict Price-Time Priority, mirroring how real exchanges prevent manipulation and preserve transparency.
+
+From a software engineering perspective, this project strengthened my skills in modular design, real-time processing, and system visualization. Handling partial order fills, timestamp preservation, and heap synchronization were some of the most challenging yet rewarding tasks, teaching me to balance performance with correctness.
+
 ## Grading Policy
 
 | Rubric                           | Points |

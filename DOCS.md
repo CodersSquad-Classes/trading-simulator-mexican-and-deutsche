@@ -55,6 +55,22 @@ The program is built on a modular, header-driven C++ architecture that ensures a
 
 ```
 
+To enforce the "Price-Time Priority" rule, we implemented custom comparators for the priority queues. Here is the `BuyComparator` from `OrderBook.h`, which ensures the highest price sits at the top, breaking ties with the oldest timestamp:
+
+```cpp
+// From OrderBook.h
+struct BuyComparator {
+    bool operator()(const Order& a, const Order& b) {
+        // 1. Price Priority: Higher price is better (Max-Heap)
+        if (a.price != b.price) {
+            return a.price < b.price; 
+        }
+        // 2. Time Priority: Smaller timestamp (older) is better (FIFO)
+        return a.timestamp > b.timestamp; 
+    }
+};
+```
+
 ## Conclusions and Learning - Julius
 
 This project demonstrated the critical role of data structure selection in complex systems. Implementing a Continuous Limit Order Book (CLOB) revealed that simple arrays or vectors are insufficient for real-time trading due to sorting overhead. By utilizing Priority Queues (Heaps), we achieved the necessary $O(1)$ access time for the best bid and ask prices, ensuring the matching engine operates efficiently even under load. The project provided deep insight into market strcuture. By translating the theoretical concept of Price-Time Priority into C++ code highlighted the complexity of edge cases, particularly "Partial Fills", thus ensuring that remaining order quantities retain their original priority timestamp was a key implementation challenge. Building the Terminal UI proved that a functional, professional-looking dashboard can be created without heavy graphical libraries. Showing The capabilities of the Terminal are not as limited as they might seem.

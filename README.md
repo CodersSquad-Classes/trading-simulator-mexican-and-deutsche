@@ -47,12 +47,41 @@ To ensure fair execution, the matching engine operates on a strict **Price-Time 
 
 The program is built on a modular, header-driven C++ architecture that ensures a separation between data management, trade execution logic, and visualization. At the core of the system, the OrderBook uses two distinct std::priority_queue instances to efficiently manage liquidity, we chose them for their ability to handle order insertions in logarithmic time ($O(\log n)$) and provide constant time ($O(1)$) access to the best available prices. Custom comparator structs enforce the strict Price-Time priority rules: a Max-Heap is used for the Buy side to prioritize the highest bids, while a Min-Heap manages the Sell side to prioritize the lowest asks, with both implementing a secondary "First-In-First-Out" (FIFO) logic to resolve price ties based on order timestamps. The MatchingEngine acts as the central processor, continuously evaluating the top of these queues, whenever a Bid price meets or exceeds an Ask price, a trade is executed, and any remaining quantity from partially filled orders is re-inserted into the book while strictly preserving its original timestamp to maintain market fairness. Finally, the user interface is implemented as a high-performance Real-Time Terminal UI using ANSI escape for color-coding (green for bids, red for asks) and cursor positioning, effectively simulating a professional trading dashboard like the Island ECN without using external graphical libraries.
 
+```text
++---------------------+             +---------------------------+
+|   main.cpp (Bot)    |             |        Display.cpp        |
+|  - Generates Orders |             | - Clears Screen           |
+|  - Updates Loop     |             | - Renders Bids/Asks       |
++---------------------+             +---------------------------+
+          |                                       ^
+          | 1. addOrder()                         | 4. read()
+          v                                       |
++---------------------------------------------------------------+
+|                        OrderBook.h                            |
+|                                                               |
+|   +----------------------+       +----------------------+     |
+|   |      BUY Queue       |       |      SELL Queue      |     |
+|   | (std::priority_queue)|       | (std::priority_queue)|     |
+|   |      Max-Heap        |       |       Min-Heap       |     |
+|   +----------------------+       +----------------------+     |
++---------------------------------------------------------------+
+          ^                                       ^
+          | 2. getBest()                          | 3. pop() / update
+          v                                       v
++---------------------------------------------------------------+
+|                     MatchingEngine.cpp                        |
+|           - Checks: BestBid >= BestAsk?                       |
+|           - Executes Trades                                   |
+|           - Handles Partial Fills                             |
++---------------------------------------------------------------+
+
+```
+
 ## Conclusions and Learning - Julius
 
 This project demonstrated the critical role of data structure selection in complex systems. Implementing a Continuous Limit Order Book (CLOB) revealed that simple arrays or vectors are insufficient for real-time trading due to sorting overhead. By utilizing Priority Queues (Heaps), we achieved the necessary $O(1)$ access time for the best bid and ask prices, ensuring the matching engine operates efficiently even under load. The project provided deep insight into market strcuture. By translating the theoretical concept of Price-Time Priority into C++ code highlighted the complexity of edge cases, particularly "Partial Fills", thus ensuring that remaining order quantities retain their original priority timestamp was a key implementation challenge. Building the Terminal UI proved that a functional, professional-looking dashboard can be created without heavy graphical libraries. Showing The capabilities of the Terminal are not as limited as they might seem.
 
 ## Conclusions and Learning - Don Calderon
-
 
 ## Grading Policy
 
@@ -62,3 +91,5 @@ This project demonstrated the critical role of data structure selection in compl
 | Terminal-based real-time UI      |   30   |
 | Documentation                    |   30   |
 | Total                            |   100  |
+
+```bash
